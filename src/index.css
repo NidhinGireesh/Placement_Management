@@ -1,0 +1,151 @@
+@import "tailwindcss";
+
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Reusable reveal animation */
+.fade-up {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s ease-out;
+}
+
+.fade-up.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ======================================================
+   1. Official College Color Palette (CSS Variables)
+   ====================================================== */
+:root {
+  --pgdav-green: #006951;
+  --pgdav-light: #f0fdf4;
+  --accent-yellow: #facc15;
+}
+
+/* ======================================================
+   2. Global Base Styles
+   ====================================================== */
+html {
+  scroll-behavior: smooth;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body {
+  background-color: #f8fafc; /* subtle neutral background */
+  color: #1e293b;
+}
+
+/* Prevent horizontal overflow (fixes swipe issue) */
+html,
+body {
+  overflow-x: hidden;
+}
+
+/* ======================================================
+   3. Keyframe Animations
+   ====================================================== */
+
+/* Top announcement marquee */
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* Infinite logo scroll (Past Associates) */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Fade-in animation (dropdowns, mobile menu, modals) */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ======================================================
+   4. Animation Utility Classes
+   ====================================================== */
+.animate-marquee {
+  display: inline-block;
+  animation: marquee 20s linear infinite;
+  white-space: nowrap;
+}
+
+.animate-scroll {
+  display: flex;
+  animation: scroll 30s linear infinite;
+  will-change: transform;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.25s ease-out forwards;
+}
+
+/* ======================================================
+   5. Calendar (react-calendar) Custom Styling
+   ====================================================== */
+.react-calendar {
+  width: 100% !important;
+  border: none !important;
+  font-family: inherit !important;
+  background: transparent;
+}
+
+.react-calendar__tile--active {
+  background: var(--pgdav-green) !important;
+  color: #ffffff !important;
+  border-radius: 4px;
+}
+
+.react-calendar__tile:enabled:hover {
+  background-color: var(--pgdav-light) !important;
+}
+
+.react-calendar__navigation button:hover {
+  background-color: var(--pgdav-light) !important;
+}
+
+/* ======================================================
+   6. Decorative Shapes (Stats Chevron)
+   ====================================================== */
+.chevron-shape {
+  clip-path: polygon(
+    0% 0%,
+    90% 0%,
+    100% 50%,
+    90% 100%,
+    0% 100%
+  );
+}
+
+/* ======================================================
+   7. Recharts Tooltip Styling
+   ====================================================== */
+.recharts-default-tooltip {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  padding: 8px 12px;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1) !important;
+}
+
+
