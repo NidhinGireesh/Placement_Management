@@ -34,7 +34,7 @@ export const registerUser = async (email, password, userData) => {
         branch: userData.branch || '',
         gender: userData.gender || '',
         dob: userData.dob || null,
-        lateralEntry: 'no',
+        lateralEntry: userData.lateralEntry || 'no',
         cgpa: 0,
         skills: [],
         resumeUrl: '',

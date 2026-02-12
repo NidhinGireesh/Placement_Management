@@ -1,12 +1,20 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavLink, Outlet, Routes, Route, Navigate } from 'react-router-dom';
 import { logoutUser } from '../../services/authService';
 import { useAuthStore } from '../../store/authStore';
+import { LayoutDashboard, Users, UserCheck, Building, Briefcase, FileText, Settings, BookOpen } from 'lucide-react';
+
+// Components
+import AdminOverview from './AdminOverview';
+import StudentManagement from './StudentManagement';
+import CoordinatorManagement from './CoordinatorManagement';
+import CompanyManagement from './CompanyManagement';
+import JobManagement from './JobManagement';
+import ReportAnalysis from './ReportAnalysis';
+import CourseManagement from './CourseManagement';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
-  const { user, logout } = useAuthStore();
-  const [activeTab, setActiveTab] = useState('overview');
+  const { logout } = useAuthStore();
 
   const handleLogout = async () => {
     const result = await logoutUser();
@@ -16,21 +24,25 @@ export default function AdminDashboard() {
     }
   };
 
-  const SidebarItem = ({ id, icon, label }) => (
-    <button
-      onClick={() => setActiveTab(id)}
-      className="sidebar-item"
-      style={{
-        color: activeTab === id ? 'white' : '#9ca3af',
-        backgroundColor: activeTab === id ? '#1f2937' : 'transparent',
-        borderRight: activeTab === id ? '4px solid #ef4444' : 'none'
-      }}
-      onMouseEnter={(e) => { if (activeTab !== id) { e.currentTarget.style.backgroundColor = '#1f2937'; e.currentTarget.style.color = 'white'; } }}
-      onMouseLeave={(e) => { if (activeTab !== id) { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#9ca3af'; } }}
+  const SidebarItem = ({ to, icon, label }) => (
+    <NavLink
+      to={to}
+      end={to === "/admin"}
+      className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}
+      style={({ isActive }) => ({
+        textDecoration: 'none',
+        color: isActive ? 'white' : '#9ca3af',
+        backgroundColor: isActive ? '#1f2937' : 'transparent',
+        borderRight: isActive ? '4px solid #ef4444' : 'none',
+        display: 'flex',
+        alignItems: 'center',
+        width: '100%',
+        padding: '0.75rem 1rem'
+      })}
     >
-      <span style={{ marginRight: '0.75rem', fontSize: '1.25rem' }}>{icon}</span>
+      <span style={{ marginRight: '0.75rem' }}>{icon}</span>
       <span style={{ fontWeight: 600 }}>{label}</span>
-    </button>
+    </NavLink>
   );
 
   return (
@@ -45,10 +57,13 @@ export default function AdminDashboard() {
         </div>
 
         <nav className="sidebar-nav" style={{ marginTop: '1rem' }}>
-          <SidebarItem id="overview" icon="🖥️" label="Dashboard" />
-          <SidebarItem id="users" icon="👥" label="User Management" />
-          <SidebarItem id="settings" icon="⚙️" label="System Config" />
-          <SidebarItem id="logs" icon="📜" label="Audit Logs" />
+          <SidebarItem to="/admin" icon={<LayoutDashboard size={20} />} label="Dashboard" />
+          <SidebarItem to="/admin/students" icon={<Users size={20} />} label="Students" />
+          <SidebarItem to="/admin/coordinators" icon={<UserCheck size={20} />} label="Coordinators" />
+          <SidebarItem to="/admin/companies" icon={<Building size={20} />} label="Companies" />
+          <SidebarItem to="/admin/jobs" icon={<Briefcase size={20} />} label="Job Postings" />
+          <SidebarItem to="/admin/courses" icon={<BookOpen size={20} />} label="Courses & Depts" />
+          <SidebarItem to="/admin/reports" icon={<FileText size={20} />} label="Reports & Analytics" />
         </nav>
 
         <div style={{ padding: '1.5rem', marginTop: 'auto', borderTop: '1px solid #1f2937' }}>
@@ -63,7 +78,8 @@ export default function AdminDashboard() {
               cursor: 'pointer',
               fontWeight: 600,
               fontSize: '1rem',
-              transition: 'color 0.2s'
+              transition: 'color 0.2s',
+              width: '100%'
             }}
             onMouseEnter={(e) => e.currentTarget.style.color = '#f87171'}
             onMouseLeave={(e) => e.currentTarget.style.color = '#ef4444'}
@@ -76,49 +92,16 @@ export default function AdminDashboard() {
 
       {/* Main Content */}
       <main className="main-content" style={{ backgroundColor: '#f9fafb' }}>
-        <header className="flex justify-between items-center" style={{ marginBottom: '2rem' }}>
-          <div>
-            <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#111827' }}>
-              System Overview
-            </h1>
-            <p style={{ color: '#6b7280', marginTop: '0.25rem' }}>Monitoring active system status.</p>
-          </div>
-          <div style={{
-            backgroundColor: 'white',
-            padding: '0.5rem 1rem',
-            borderRadius: '9999px',
-            boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)',
-            display: 'flex',
-            alignItems: 'center',
-            border: '1px solid #e5e7eb'
-          }}>
-            <div style={{ width: '0.75rem', height: '0.75rem', backgroundColor: '#22c55e', borderRadius: '50%', marginRight: '0.5rem' }}></div>
-            <span style={{ fontSize: '0.875rem', fontWeight: 500, color: '#374151' }}>System Online</span>
-          </div>
-        </header>
-
-        {/* Stats Grid */}
-        <div className="grid grid-cols-4 gap-6" style={{ marginBottom: '2rem' }}>
-          <div className="stat-card" style={{ borderTopWidth: '4px', borderLeftWidth: '0', borderTopColor: '#2563eb' }}>
-            <h3 style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Total Students</h3>
-            <p style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#1f2937', marginTop: '0.5rem' }}>0</p>
-          </div>
-
-          <div className="stat-card" style={{ borderTopWidth: '4px', borderLeftWidth: '0', borderTopColor: '#0d9488' }}>
-            <h3 style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Coordinators</h3>
-            <p style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#1f2937', marginTop: '0.5rem' }}>0</p>
-          </div>
-
-          <div className="stat-card" style={{ borderTopWidth: '4px', borderLeftWidth: '0', borderTopColor: '#9333ea' }}>
-            <h3 style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Recruiters</h3>
-            <p style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#1f2937', marginTop: '0.5rem' }}>0</p>
-          </div>
-
-          <div className="stat-card" style={{ borderTopWidth: '4px', borderLeftWidth: '0', borderTopColor: '#dc2626' }}>
-            <h3 style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>System Alerts</h3>
-            <p style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#1f2937', marginTop: '0.5rem' }}>0</p>
-          </div>
-        </div>
+        <Routes>
+          <Route index element={<AdminOverview />} />
+          <Route path="students" element={<StudentManagement />} />
+          <Route path="coordinators" element={<CoordinatorManagement />} />
+          <Route path="companies" element={<CompanyManagement />} />
+          <Route path="jobs" element={<JobManagement />} />
+          <Route path="courses" element={<CourseManagement />} />
+          <Route path="reports" element={<ReportAnalysis />} />
+          <Route path="*" element={<Navigate to="/admin" replace />} />
+        </Routes>
       </main>
     </div>
   );

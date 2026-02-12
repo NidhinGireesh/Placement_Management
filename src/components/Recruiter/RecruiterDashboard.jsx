@@ -1,12 +1,20 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavLink, Outlet, Routes, Route, Navigate } from 'react-router-dom';
 import { logoutUser } from '../../services/authService';
 import { useAuthStore } from '../../store/authStore';
+import { LayoutDashboard, Briefcase, Users, Calendar, FileText, CheckSquare, PlusCircle, Building } from 'lucide-react';
+
+// Components
+import RecruiterOverview from './RecruiterOverview';
+import JobPostingForm from './JobPostingForm';
+import ApplicationList from './ApplicationList';
+import InterviewScheduling from './InterviewScheduling';
+import RecruiterReports from './RecruiterReports';
+import SelectionManagement from './SelectionManagement';
+import CompanyProfile from './CompanyProfile';
 
 export default function RecruiterDashboard() {
   const navigate = useNavigate();
-  const { user, logout } = useAuthStore();
-  const [activeTab, setActiveTab] = useState('overview');
+  const { logout } = useAuthStore();
 
   const handleLogout = async () => {
     const result = await logoutUser();
@@ -16,19 +24,25 @@ export default function RecruiterDashboard() {
     }
   };
 
-  const SidebarItem = ({ id, icon, label }) => (
-    <button
-      onClick={() => setActiveTab(id)}
-      className="sidebar-item"
-      style={activeTab === id ? {
-        backgroundColor: 'rgba(147, 51, 234, 0.1)',
-        color: '#9333ea',
-        borderRight: '4px solid #9333ea'
-      } : {}}
+  const SidebarItem = ({ to, icon, label }) => (
+    <NavLink
+      to={to}
+      end={to === "/recruiter"}
+      className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}
+      style={({ isActive }) => ({
+        textDecoration: 'none',
+        color: isActive ? '#9333ea' : 'inherit',
+        display: 'flex',
+        alignItems: 'center',
+        width: '100%',
+        padding: '0.75rem 1rem',
+        backgroundColor: isActive ? 'rgba(147, 51, 234, 0.1)' : 'transparent',
+        borderRight: isActive ? '4px solid #9333ea' : 'none'
+      })}
     >
-      <span style={{ marginRight: '0.75rem', fontSize: '1.25rem' }}>{icon}</span>
+      <span style={{ marginRight: '0.75rem' }}>{icon}</span>
       <span style={{ fontWeight: 600 }}>{label}</span>
-    </button>
+    </NavLink>
   );
 
   return (
@@ -49,10 +63,13 @@ export default function RecruiterDashboard() {
         </div>
 
         <nav className="sidebar-nav">
-          <SidebarItem id="overview" icon="📊" label="Overview" />
-          <SidebarItem id="jobs" icon="📢" label="My Postings" />
-          <SidebarItem id="candidates" icon="👥" label="Candidates" />
-          <SidebarItem id="interviews" icon="🗓️" label="Interviews" />
+          <SidebarItem to="/recruiter" icon={<LayoutDashboard size={20} />} label="Overview" />
+          <SidebarItem to="/recruiter/profile" icon={<Building size={20} />} label="Company Profile" />
+          <SidebarItem to="/recruiter/post-job" icon={<PlusCircle size={20} />} label="Post a Job" />
+          <SidebarItem to="/recruiter/applications" icon={<Users size={20} />} label="Applications" />
+          <SidebarItem to="/recruiter/interviews" icon={<Calendar size={20} />} label="Interviews" />
+          <SidebarItem to="/recruiter/selection" icon={<CheckSquare size={20} />} label="Selection" />
+          <SidebarItem to="/recruiter/reports" icon={<FileText size={20} />} label="Reports" />
         </nav>
 
         <div style={{ padding: '1.5rem', marginTop: 'auto', borderTop: '1px solid #e5e7eb' }}>
@@ -77,64 +94,16 @@ export default function RecruiterDashboard() {
 
       {/* Main Content */}
       <main className="main-content">
-        <header className="flex justify-between items-center" style={{ marginBottom: '2rem' }}>
-          <div>
-            <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#1f2937' }}>
-              Welcome, <span style={{ color: '#9333ea' }}>{user?.name}</span>
-            </h1>
-            <p style={{ color: '#6b7280', marginTop: '0.25rem' }}>Find your next star employee here.</p>
-          </div>
-          <div className="flex items-center space-x-4">
-            <button className="btn" style={{
-              backgroundColor: '#9333ea',
-              color: 'white',
-              boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)',
-              transform: 'translateY(0)',
-              transition: 'transform 0.2s'
-            }}
-              onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
-              onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-            >
-              + Post New Job
-            </button>
-          </div>
-        </header>
-
-        {/* Stats Grid */}
-        <div className="grid grid-cols-3 gap-6" style={{ marginBottom: '2rem' }}>
-          <div style={{
-            background: 'linear-gradient(135deg, #a855f7, #4f46e5)',
-            borderRadius: '0.75rem',
-            padding: '1.5rem',
-            color: 'white',
-            boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)'
-          }}>
-            <div className="flex justify-between items-center" style={{ marginBottom: '1rem', opacity: 0.8 }}>
-              <h3 style={{ fontWeight: 500 }}>Active Jobs</h3>
-              <span style={{ fontSize: '1.5rem' }}>📢</span>
-            </div>
-            <p style={{ fontSize: '2.25rem', fontWeight: 'bold' }}>0</p>
-            <p style={{ fontSize: '0.875rem', marginTop: '0.5rem', opacity: 0.75 }}>Positions Open</p>
-          </div>
-
-          <div className="stat-card" style={{ borderTopWidth: '4px', borderLeftWidth: '0', borderTopColor: '#9333ea' }}>
-            <div className="flex justify-between items-center" style={{ marginBottom: '1rem' }}>
-              <h3 style={{ color: '#6b7280', fontWeight: 500 }}>Total Applications</h3>
-              <span style={{ fontSize: '1.25rem', backgroundColor: '#f3e8ff', color: '#9333ea', padding: '0.25rem 0.5rem', borderRadius: '0.5rem' }}>📄</span>
-            </div>
-            <p style={{ fontSize: '2.25rem', fontWeight: 'bold', color: '#1f2937' }}>0</p>
-            <p style={{ fontSize: '0.875rem', color: '#16a34a', marginTop: '0.5rem', fontWeight: 500 }}>New today</p>
-          </div>
-
-          <div className="stat-card" style={{ borderTopWidth: '4px', borderLeftWidth: '0', borderTopColor: '#22c55e' }}>
-            <div className="flex justify-between items-center" style={{ marginBottom: '1rem' }}>
-              <h3 style={{ color: '#6b7280', fontWeight: 500 }}>Shortlisted</h3>
-              <span style={{ fontSize: '1.25rem', backgroundColor: '#dcfce7', color: '#16a34a', padding: '0.25rem 0.5rem', borderRadius: '0.5rem' }}>✅</span>
-            </div>
-            <p style={{ fontSize: '2.25rem', fontWeight: 'bold', color: '#1f2937' }}>0</p>
-            <p style={{ fontSize: '0.875rem', color: '#6b7280', marginTop: '0.5rem', fontWeight: 500 }}>Candidates</p>
-          </div>
-        </div>
+        <Routes>
+          <Route index element={<RecruiterOverview />} />
+          <Route path="profile" element={<CompanyProfile />} />
+          <Route path="post-job" element={<JobPostingForm />} />
+          <Route path="applications" element={<ApplicationList />} />
+          <Route path="interviews" element={<InterviewScheduling />} />
+          <Route path="selection" element={<SelectionManagement />} />
+          <Route path="reports" element={<RecruiterReports />} />
+          <Route path="*" element={<Navigate to="/recruiter" replace />} />
+        </Routes>
       </main>
     </div>
   );

@@ -23,7 +23,9 @@ function App() {
   const { setUser, setRole, setLoading } = useAuthStore();
 
   useEffect(() => {
+    console.log("App mounted. Setting up auth listener.");
     const unsubscribe = setupAuthListener((user) => {
+      console.log("Auth listener fired. User:", user);
       if (user) {
         setUser(user);
         setRole(user.role);
@@ -38,51 +40,51 @@ function App() {
   }, [setUser, setRole, setLoading]);
 
   return (
-    
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
 
-        {/* Protected Routes */}
-        <Route
-          path="/student/*"
-          element={
-            <ProtectedRoute requiredRole="student">
-              <StudentDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/*"
-          element={
-            <ProtectedRoute requiredRole="admin">
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/coordinator/*"
-          element={
-            <ProtectedRoute requiredRole="coordinator">
-              <CoordinatorDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/recruiter/*"
-          element={
-            <ProtectedRoute requiredRole="recruiter">
-              <RecruiterDashboard />
-            </ProtectedRoute>
-          }
-        />
+    <Routes>
+      {/* Public Routes */}
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
 
-        {/* Catch All */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-   
+      {/* Protected Routes */}
+      <Route
+        path="/student/*"
+        element={
+          <ProtectedRoute requiredRole="student">
+            <StudentDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/*"
+        element={
+          <ProtectedRoute requiredRole="admin">
+            <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/coordinator/*"
+        element={
+          <ProtectedRoute requiredRole="coordinator">
+            <CoordinatorDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/recruiter/*"
+        element={
+          <ProtectedRoute requiredRole="recruiter">
+            <RecruiterDashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Catch All */}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+
   );
 }
 

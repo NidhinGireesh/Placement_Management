@@ -4,6 +4,7 @@ import { useAuthStore } from '../../store/authStore';
 
 export default function ProtectedRoute({ children, requiredRole }) {
   const { user, role, loading } = useAuthStore();
+  console.log("ProtectedRoute:", { user, role, loading, requiredRole });
 
 
   if (loading) {
@@ -18,7 +19,7 @@ export default function ProtectedRoute({ children, requiredRole }) {
   }
 
   if (!user) {
-    return <Navigate to="/login"replace />;
+    return <Navigate to="/login" replace />;
   }
 
   if (requiredRole && role !== requiredRole) {

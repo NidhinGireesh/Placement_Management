@@ -13,7 +13,9 @@ export default function Register() {
     // Student specific
     registerNumber: '',
     passoutYear: '',
+    passoutYear: '',
     branch: '',
+    lateralEntry: 'no', // Default to no
   });
 
   const [error, setError] = useState('');
@@ -186,6 +188,21 @@ export default function Register() {
                     <option value="EEE">ECE</option>
                     <option value="RAI">RAI</option>
 
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">
+                    Lateral Entry
+                  </label>
+                  <select
+                    name="lateralEntry"
+                    value={formData.lateralEntry}
+                    onChange={handleChange}
+                    className="form-input"
+                  >
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
                   </select>
                 </div>
               </div>

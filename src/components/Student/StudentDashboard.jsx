@@ -1,12 +1,17 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavLink, Outlet, Routes, Route, Navigate } from 'react-router-dom';
 import { logoutUser } from '../../services/authService';
 import { useAuthStore } from '../../store/authStore';
+import StudentOverview from './StudentOverview';
+import Student from './Student';
+import JobBoard from './JobBoard';
+import JobDetails from './JobDetails';
+import ApplicationTracker from './ApplicationTracker';
+import ResumeUpload from './ResumeUpload';
+import NotificationPage from './NotificationPage';
 
 export default function StudentDashboard() {
   const navigate = useNavigate();
   const { user, logout } = useAuthStore();
-  const [activeTab, setActiveTab] = useState('overview');
 
   const handleLogout = async () => {
     const result = await logoutUser();
@@ -16,14 +21,16 @@ export default function StudentDashboard() {
     }
   };
 
-  const SidebarItem = ({ id, icon, label }) => (
-    <button
-      onClick={() => setActiveTab(id)}
-      className={`sidebar-item ${activeTab === id ? 'active' : ''}`}
+  const SidebarItem = ({ to, icon, label }) => (
+    <NavLink
+      to={to}
+      end={to === "/student"}
+      className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}
+      style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', width: '100%', padding: '0.75rem 1rem' }}
     >
       <span style={{ marginRight: '0.75rem', fontSize: '1.25rem' }}>{icon}</span>
       <span style={{ fontWeight: 600 }}>{label}</span>
-    </button>
+    </NavLink>
   );
 
   return (
@@ -44,11 +51,12 @@ export default function StudentDashboard() {
         </div>
 
         <nav className="sidebar-nav">
-          <SidebarItem id="overview" icon="📊" label="Overview" />
-          <SidebarItem id="profile" icon="👨‍🎓" label="My Profile" />
-          <SidebarItem id="jobs" icon="💼" label="Job Board" />
-          <SidebarItem id="applications" icon="📝" label="Applications" />
-          <SidebarItem id="interviews" icon="🤝" label="Interviews" />
+          <SidebarItem to="/student" icon="📊" label="Overview" />
+          <SidebarItem to="/student/profile" icon="👨‍🎓" label="My Profile" />
+          <SidebarItem to="/student/jobs" icon="💼" label="Job Board" />
+          <SidebarItem to="/student/applications" icon="📝" label="Applications" />
+          <SidebarItem to="/student/resume" icon="📄" label="Resume" />
+          <SidebarItem to="/student/notifications" icon="🔔" label="Notifications" />
         </nav>
 
         <div style={{ padding: '1.5rem', marginTop: 'auto', borderTop: '1px solid #e5e7eb' }}>
@@ -62,7 +70,8 @@ export default function StudentDashboard() {
               border: 'none',
               cursor: 'pointer',
               fontWeight: 600,
-              fontSize: '1rem'
+              fontSize: '1rem',
+              width: '100%'
             }}
           >
             <span style={{ marginRight: '0.75rem' }}>🚪</span>
@@ -99,48 +108,17 @@ export default function StudentDashboard() {
           </div>
         </header>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-4 gap-6" style={{ marginBottom: '2rem' }}>
-          <div className="stat-card" style={{ borderLeftColor: '#facc15' }}>
-            <h3 style={{ fontSize: '0.875rem', fontWeight: 'bold', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Profile Status</h3>
-            <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#f59e0b', marginTop: '0.25rem' }}>Pending</p>
-          </div>
-
-          <div className="stat-card" style={{ borderLeftColor: '#3b82f6' }}>
-            <h3 style={{ fontSize: '0.875rem', fontWeight: 'bold', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Active Apps</h3>
-            <p style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#1f2937', marginTop: '0.25rem' }}>0</p>
-          </div>
-
-          <div className="stat-card" style={{ borderLeftColor: '#a855f7' }}>
-            <h3 style={{ fontSize: '0.875rem', fontWeight: 'bold', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Interviews</h3>
-            <p style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#1f2937', marginTop: '0.25rem' }}>0</p>
-          </div>
-
-          <div className="stat-card" style={{ borderLeftColor: '#22c55e' }}>
-            <h3 style={{ fontSize: '0.875rem', fontWeight: 'bold', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Placement</h3>
-            <p style={{ fontSize: '1.125rem', fontWeight: 'bold', color: '#1f2937', marginTop: '0.5rem' }}>Not Yet</p>
-          </div>
-        </div>
-
-        {/* Content Area Example */}
-        <div style={{ backgroundColor: 'white', borderRadius: '1rem', padding: '2rem', boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#1f2937', marginBottom: '1.5rem', display: 'flex', alignItems: 'center' }}>
-            <span style={{ backgroundColor: '#dbeafe', color: '#2563eb', padding: '0.25rem 0.5rem', borderRadius: '0.5rem', marginRight: '0.75rem', fontSize: '1rem' }}>📢</span>
-            Recent Updates
-          </h2>
-
-          <div className="space-y-4">
-            <div style={{ padding: '1rem', backgroundColor: '#f9fafb', borderRadius: '0.5rem', border: '1px solid #e5e7eb' }}>
-              <div className="flex justify-between items-start">
-                <div>
-                  <h4 style={{ fontWeight: 'bold', color: '#1f2937' }}>Profile Complete?</h4>
-                  <p style={{ fontSize: '0.875rem', color: '#4b5563', marginTop: '0.25rem' }}>Please ensure your profile is 100% complete to apply for upcoming drives.</p>
-                </div>
-                <span style={{ fontSize: '0.75rem', fontWeight: 600, backgroundColor: '#fef3c7', color: '#b45309', padding: '0.25rem 0.75rem', borderRadius: '9999px' }}>Action Required</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* Dynamic Content via Outlet */}
+        <Routes>
+          <Route index element={<StudentOverview />} />
+          <Route path="profile" element={<Student />} />
+          <Route path="jobs" element={<JobBoard />} />
+          <Route path="jobs/:id" element={<JobDetails />} />
+          <Route path="applications" element={<ApplicationTracker />} />
+          <Route path="resume" element={<ResumeUpload />} />
+          <Route path="notifications" element={<NotificationPage />} />
+          <Route path="*" element={<Navigate to="/student" replace />} />
+        </Routes>
       </main>
     </div>
   );
