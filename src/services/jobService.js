@@ -1,16 +1,13 @@
 
 import { db } from '../config/firebaseConfig';
-import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
+import { collection, query, where, getDocs, orderBy, addDoc, deleteDoc, doc } from 'firebase/firestore';
 
 const COLLECTION_NAME = 'jobs';
 
 export const getOpenJobs = async () => {
     try {
-        // Assuming jobs have a 'status' field and 'deadline'
-        // For now, just fetching all jobs, later can filter by status 'open' or deadline
         const q = query(
             collection(db, COLLECTION_NAME),
-            // where('status', '==', 'open'), // Uncomment when job structure is confirmed
             orderBy('createdAt', 'desc')
         );
         const querySnapshot = await getDocs(q);
@@ -23,6 +20,30 @@ export const getOpenJobs = async () => {
         return { success: true, jobs };
     } catch (error) {
         console.error('Error fetching jobs:', error);
+        return { success: false, error: error.message };
+    }
+};
+
+export const createJob = async (jobData) => {
+    try {
+        await addDoc(collection(db, COLLECTION_NAME), {
+            ...jobData,
+            createdAt: new Date(),
+            status: 'open' // Default status
+        });
+        return { success: true };
+    } catch (error) {
+        console.error('Error creating job:', error);
+        return { success: false, error: error.message };
+    }
+};
+
+export const deleteJob = async (jobId) => {
+    try {
+        await deleteDoc(doc(db, COLLECTION_NAME, jobId));
+        return { success: true };
+    } catch (error) {
+        console.error('Error deleting job:', error);
         return { success: false, error: error.message };
     }
 };

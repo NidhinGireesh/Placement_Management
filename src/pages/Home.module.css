@@ -1,0 +1,502 @@
+/* Home.module.css */
+
+/* General Formatting */
+.pageContainer {
+  font-family: 'Inter', sans-serif;
+  color: #1f2937;
+  overflow-x: hidden;
+}
+
+.section {
+  padding: 5rem 1rem;
+  position: relative;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.sectionTitle {
+  font-size: 2.25rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 3rem;
+  color: #111827;
+}
+
+.highlight {
+  color: #2563eb;
+}
+
+/* 1. Hero Section */
+.hero {
+  min-height: 90vh;
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.heroContent {
+  z-index: 10;
+  max-width: 800px;
+  animation: fadeIn 1s ease-out;
+}
+
+.heroTitle {
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+}
+
+.heroSubtitle {
+  font-size: 1.25rem;
+  opacity: 0.9;
+  margin-bottom: 2.5rem;
+}
+
+.ctaGroup {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 0.875rem 2rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.3s;
+  cursor: pointer;
+  border: none;
+  font-size: 1rem;
+}
+
+.btnPrimary {
+  background-color: white;
+  color: #2563eb;
+}
+.btnPrimary:hover {
+  background-color: #f3f4f6;
+  transform: translateY(-2px);
+}
+
+.btnSecondary {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(5px);
+}
+.btnSecondary:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 2. Stats Section */
+.statsSection {
+  background-color: #f8fafc;
+  margin-top: -4rem;
+  position: relative;
+  z-index: 20;
+  padding-bottom: 3rem;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  background: white;
+  padding: 3rem;
+  border-radius: 1rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.statCard {
+  text-align: center;
+}
+
+.statNumber {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #2563eb;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.statLabel {
+  color: #64748b;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.875rem;
+}
+
+/* 3. Recruiters Carousel */
+.recruitersSection {
+  background: white;
+  overflow: hidden;
+}
+
+.scrollContainer {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.scrollTrack {
+  display: flex;
+  gap: 4rem;
+  animation: scroll 30s linear infinite;
+  padding: 2rem 0;
+  min-width: 100%;
+}
+
+.companyLogo {
+  height: 60px;
+  width: auto;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+  filter: grayscale(100%);
+}
+.companyLogo:hover {
+  opacity: 1;
+  filter: grayscale(0%);
+}
+
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* 4. How It Works */
+.stepsSection {
+  background-color: #f8fafc;
+}
+
+.roleToggle {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.toggleBtn {
+  padding: 0.5rem 1.5rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  background: #e2e8f0;
+  color: #64748b;
+  transition: all 0.3s;
+}
+
+.toggleBtn.active {
+  background: #2563eb;
+  color: white;
+}
+
+.stepsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.stepCard {
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  text-align: center;
+  position: relative;
+  transition: transform 0.3s;
+}
+.stepCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.stepIcon {
+  width: 64px;
+  height: 64px;
+  background: #eff6ff;
+  color: #2563eb;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  font-size: 1.5rem;
+}
+
+/* 5. Upcoming Drives */
+.drivesSection {
+  background: white;
+}
+
+.drivesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.driveCard {
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.driveCard:hover {
+  border-color: #2563eb;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.driveHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.companyName {
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.deadlineBadge {
+  background: #fee2e2;
+  color: #ef4444;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-weight: 600;
+}
+
+/* 6. Testimonials */
+.testimonialsSection {
+  background: #1e293b;
+  color: white;
+}
+
+.testimonialCard {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  border-radius: 1rem;
+  backdrop-filter: blur(5px);
+}
+
+.quote {
+  font-size: 1.125rem;
+  font-style: italic;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.authorAvatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #334155;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+/* 7. Chart Section */
+.chartSection {
+  background: white;
+}
+
+.chartContainer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  height: 300px;
+  padding-top: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.barGroup {
+  text-align: center;
+  width: 100%;
+  margin: 0 0.5rem;
+}
+
+.bar {
+  background: #3b82f6;
+  border-radius: 0.5rem 0.5rem 0 0;
+  transition: height 1s ease-out;
+  width: 100%;
+  max-width: 60px;
+  margin: 0 auto;
+  position: relative;
+}
+.bar:hover {
+  background: #2563eb;
+}
+
+.percentage {
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: 700;
+}
+
+.label {
+  margin-top: 0.5rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+/* 8. Features */
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.featureCard {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.featureIcon {
+  background: #e0e7ff;
+  color: #4f46e5;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+}
+
+/* 9. Announcements */
+.announcementBar {
+  background: #2563eb;
+  color: white;
+  padding: 0.75rem;
+  overflow: hidden;
+}
+
+.marquee {
+  white-space: nowrap;
+  animation: marquee 20s linear infinite;
+  display: inline-block;
+  padding-left: 100%;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+/* 10. FAQ */
+.faqSection {
+  background: #f8fafc;
+}
+
+.faqGrid {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.faqItem {
+  background: white;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.faqQuestion {
+  padding: 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.faqAnswer {
+  padding: 0 1.5rem 1.5rem;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+/* 11. Contact */
+.contactSection {
+  background: #111827;
+  color: white;
+  padding: 5rem 1rem 2rem;
+}
+
+.footerGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 3rem;
+  margin-bottom: 3rem;
+  border-bottom: 1px solid #374151;
+  padding-bottom: 3rem;
+}
+
+.footerCol h4 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: white;
+}
+
+.footerLinks {
+  list-style: none;
+}
+
+.footerLinks li {
+  margin-bottom: 0.75rem;
+}
+
+.footerLinks a {
+  color: #9ca3af;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footerLinks a:hover {
+  color: white;
+}
+
+.contactInfo p {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  color: #d1d5db;
+}
+
+.copyright {
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

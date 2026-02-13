@@ -1,17 +1,34 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from '../dashboard/Dashboard.module.css';
 import { Search, Eye } from 'lucide-react';
+import { useAuthStore } from '../../store/authStore';
+import { getCoordinatorProfile, getClassStudents } from '../../services/coordinatorService';
 
 const ClassStudentsList = () => {
+    const { user } = useAuthStore();
     const [searchTerm, setSearchTerm] = useState('');
+    const [students, setStudents] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [coordinatorInfo, setCoordinatorInfo] = useState(null);
 
-    const students = [
-        { id: 1, name: 'Alice Smith', email: 'alice@example.com', gpa: '8.8', status: 'Placed' },
-        { id: 2, name: 'Bob Johnson', email: 'bob@example.com', gpa: '7.5', status: 'Unplaced' },
-        { id: 3, name: 'Charlie Brown', email: 'charlie@example.com', gpa: '9.2', status: 'Placed' },
-        { id: 4, name: 'David Lee', email: 'david@example.com', gpa: '6.8', status: 'Unplaced' },
-        { id: 5, name: 'Eva Green', email: 'eva@example.com', gpa: '8.1', status: 'In Process' },
-    ];
+    useEffect(() => {
+        if (user) {
+            loadData();
+        }
+    }, [user]);
+
+    const loadData = async () => {
+        setLoading(true);
+        const profileResult = await getCoordinatorProfile(user.uid);
+        if (profileResult.success) {
+            setCoordinatorInfo(profileResult.profile);
+            const studentsResult = await getClassStudents(profileResult.profile.branch, profileResult.profile.passoutYear);
+            if (studentsResult.success) {
+                setStudents(studentsResult.students);
+            }
+        }
+        setLoading(false);
+    };
 
     const filteredStudents = students.filter(s =>
         s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -19,18 +36,19 @@ const ClassStudentsList = () => {
     );
 
     const getStatusColor = (status) => {
-        switch (status) {
-            case 'Placed': return styles.success;
-            case 'Unplaced': return styles.error;
-            default: return styles.warning;
-        }
+        // Status typically comes from 'approvalStatus' or 'placementStatus' (if implemented)
+        // For now simplifying to approved/pending account status
+        if (!status) return styles.warning; // Not approved
+        return styles.success; // Approved
     };
+
+    if (loading) return <div style={{ padding: '2rem', textAlign: 'center' }}>Loading...</div>;
 
     return (
         <div className={styles.dashboardContainer}>
             <div className={styles.welcomeSection}>
                 <h1>Class Student List</h1>
-                <p>View and manage students in your department.</p>
+                <p>Students in <strong>{coordinatorInfo?.branch} - {coordinatorInfo?.passoutYear}</strong></p>
             </div>
 
             <div className={styles.section}>
@@ -56,29 +74,48 @@ const ClassStudentsList = () => {
                             <tr>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>GPA</th>
+                                <th>Register No.</th>
+                                <th>CGPA</th>
                                 <th>Status</th>
-                                <th>Action</th>
+                                {/* <th>Action</th> */}
                             </tr>
                         </thead>
                         <tbody>
-                            {filteredStudents.map((s) => (
-                                <tr key={s.id}>
-                                    <td style={{ fontWeight: '500' }}>{s.name}</td>
-                                    <td>{s.email}</td>
-                                    <td>{s.gpa}</td>
-                                    <td>
-                                        <span className={`${styles.statusBadge} ${getStatusColor(s.status)}`}>
-                                            {s.status}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <button style={{ color: '#2563EB', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: '500' }}>
-                                            <Eye size={16} /> details
-                                        </button>
-                                    </td>
+                            {filteredStudents.length === 0 ? (
+                                <tr>
+                                    <td colSpan="5" style={{ textAlign: 'center', padding: '1rem' }}>No students found.</td>
                                 </tr>
-                            ))}
+                            ) : (
+                                filteredStudents.map((s) => (
+                                    <tr key={s.id}>
+                                        <td style={{ fontWeight: '500' }}>{s.name}</td>
+                                        <td>{s.email}</td>
+                                        <td>{s.registerNumber || 'N/A'}</td>
+                                        <td>{s.cgpa || '0'}</td>
+                                        <td>
+                                            <span
+                                                style={{
+                                                    padding: '0.25rem 0.5rem',
+                                                    borderRadius: '9999px',
+                                                    fontSize: '0.75rem',
+                                                    backgroundColor: s.approved ? '#DCFCE7' : '#FEF3C7',
+                                                    color: s.approved ? '#166534' : '#D97706',
+                                                    fontWeight: '500'
+                                                }}
+                                            >
+                                                {s.approved ? 'Active' : 'Pending'}
+                                            </span>
+                                        </td>
+                                        {/* 
+                                        <td>
+                                            <button style={{ color: '#2563EB', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: '500' }}>
+                                                <Eye size={16} /> details
+                                            </button>
+                                        </td>
+                                        */}
+                                    </tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
                 </div>

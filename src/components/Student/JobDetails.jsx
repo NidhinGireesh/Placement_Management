@@ -79,22 +79,46 @@ const JobDetails = () => {
                         <h1 style={{ fontSize: '1.875rem', fontWeight: '700', color: '#1F2937', marginBottom: '0.5rem' }}>{job.title}</h1>
                         <h2 style={{ fontSize: '1.25rem', color: '#2563EB', fontWeight: '600' }}>{job.companyName}</h2>
                     </div>
-                    <button
-                        onClick={handleApply}
-                        disabled={hasApplied || applying}
-                        style={{
-                            backgroundColor: hasApplied ? '#10B981' : '#2563EB',
-                            color: 'white',
-                            padding: '0.75rem 2rem',
-                            borderRadius: '0.375rem',
-                            fontWeight: '600',
-                            fontSize: '1.125rem',
-                            cursor: hasApplied || applying ? 'default' : 'pointer',
-                            opacity: applying ? 0.7 : 1
-                        }}
-                    >
-                        {hasApplied ? 'Applied Successfully' : applying ? 'Applying...' : 'Apply Now'}
-                    </button>
+                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                        {job.registrationLink && (
+                            <div style={{
+                                padding: '0.5rem 1rem',
+                                backgroundColor: '#EFF6FF',
+                                color: '#2563EB',
+                                borderRadius: '0.375rem',
+                                fontSize: '0.875rem',
+                                fontWeight: '500',
+                                border: '1px solid #BFDBFE'
+                            }}>
+                                External Registration
+                            </div>
+                        )}
+                        <button
+                            onClick={() => {
+                                if (job.registrationLink) {
+                                    window.open(job.registrationLink, '_blank');
+                                } else {
+                                    handleApply();
+                                }
+                            }}
+                            disabled={hasApplied || (applying && !job.registrationLink)}
+                            style={{
+                                backgroundColor: hasApplied ? '#10B981' : '#2563EB',
+                                color: 'white',
+                                padding: '0.75rem 2rem',
+                                borderRadius: '0.375rem',
+                                fontWeight: '600',
+                                fontSize: '1.125rem',
+                                cursor: hasApplied || applying ? 'default' : 'pointer',
+                                opacity: applying ? 0.7 : 1,
+                                border: 'none'
+                            }}
+                        >
+                            {hasApplied ? 'Applied Successfully' :
+                                job.registrationLink ? 'Register Now ↗' :
+                                    applying ? 'Applying...' : 'Apply Now'}
+                        </button>
+                    </div>
                 </div>
 
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', marginBottom: '2rem', padding: '1rem', backgroundColor: '#F9FAFB', borderRadius: '0.5rem' }}>

@@ -4,6 +4,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  sendPasswordResetEmail,
 } from 'firebase/auth';
 import { doc, setDoc, getDoc, addDoc, collection } from 'firebase/firestore';
 import { auth, db } from '../config/firebaseConfig';
@@ -14,6 +15,15 @@ export const registerUser = async (email, password, userData) => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const uid = userCredential.user.uid;
 
+    // Determine approval status based on role
+    // Students and Admins are auto-approved for now (or strictly Admin if you prefer)
+    // Coordinators and Recruiters need approval
+    let isApproved = false;
+    if (userData.role === 'admin') isApproved = true;
+    // Students, Coordinators and Recruiters need approval
+    if (userData.role === 'student') isApproved = false;
+    // Coordinators and Recruiters remain false by default
+
     // Create user document in Firestore
     await setDoc(doc(db, 'users', uid), {
       userId: uid,
@@ -21,12 +31,12 @@ export const registerUser = async (email, password, userData) => {
       email: email,
       phone: userData.phone || '',
       role: userData.role,
-      approved: userData.role === 'admin' ? true : false,
+      approved: isApproved,
       createdAt: new Date(),
     });
 
-    // If role is student, create student profile
-    if (userData.role === 'student') {
+    // If role is student or coordinator, create student profile
+    if (userData.role === 'student' || userData.role === 'coordinator') {
       await addDoc(collection(db, 'students'), {
         userId: uid,
         registerNumber: userData.registerNumber || '',
@@ -39,6 +49,21 @@ export const registerUser = async (email, password, userData) => {
         skills: [],
         resumeUrl: '',
         coordinatorId: '',
+        approvalStatus: 'pending',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+    }
+
+    // If role is recruiter, create company profile
+    if (userData.role === 'recruiter') {
+      await addDoc(collection(db, 'recruiters'), {
+        userId: uid,
+        companyName: userData.companyName || '',
+        industry: userData.industry || '',
+        website: userData.website || '',
+        location: userData.location || '',
+        description: userData.description || '',
         approvalStatus: 'pending',
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -60,11 +85,18 @@ export const loginUser = async (email, password) => {
     // Get user role from Firestore
     const userDoc = await getDoc(doc(db, 'users', uid));
     if (userDoc.exists()) {
+      const userData = userDoc.data();
+
+      if (!userData.approved) {
+        await signOut(auth); // Sign out immediately if not approved
+        return { success: false, error: 'Account pending approval. Please contact Admin.' };
+      }
+
       return {
         uid,
-        email: userDoc.data().email,
-        role: userDoc.data().role,
-        name: userDoc.data().name,
+        email: userData.email,
+        role: userData.role,
+        name: userData.name,
         success: true,
       };
     }
@@ -81,6 +113,16 @@ export const logoutUser = async () => {
   } catch (error) {
     console.error('Logout error:', error);
     return { error: error.message, success: false };
+  }
+};
+
+export const resetPassword = async (email) => {
+  try {
+    await sendPasswordResetEmail(auth, email);
+    return { success: true };
+  } catch (error) {
+    console.error('Reset password error:', error);
+    return { success: false, error: error.message };
   }
 };
 

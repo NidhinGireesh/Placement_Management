@@ -1,7 +1,7 @@
 import { useNavigate, NavLink, Outlet, Routes, Route, Navigate } from 'react-router-dom';
 import { logoutUser } from '../../services/authService';
 import { useAuthStore } from '../../store/authStore';
-import { LayoutDashboard, CheckSquare, Users, TrendingUp, Calendar, FileText, Briefcase, UserCircle, Upload } from 'lucide-react';
+import { LayoutDashboard, CheckSquare, Users, TrendingUp, Calendar, FileText, Briefcase, UserCircle, Upload, BookOpen } from 'lucide-react';
 
 // Components
 import CoordinatorOverview from './CoordinatorOverview';
@@ -16,6 +16,7 @@ import JobBoard from '../Student/JobBoard';
 import JobDetails from '../Student/JobDetails';
 import ApplicationTracker from '../Student/ApplicationTracker';
 import ResumeUpload from '../Student/ResumeUpload';
+import StudentCourseList from '../Student/StudentCourseList';
 
 export default function CoordinatorDashboard() {
   const navigate = useNavigate();
@@ -78,8 +79,8 @@ export default function CoordinatorDashboard() {
           <div className="px-4 pb-2 text-xs font-semibold text-gray-400 uppercase tracking-wider mt-6">My Placement</div>
           <SidebarItem to="/coordinator/profile" icon={<UserCircle size={20} />} label="My Profile" />
           <SidebarItem to="/coordinator/jobs" icon={<Briefcase size={20} />} label="Job Board" />
+          <SidebarItem to="/coordinator/courses" icon={<BookOpen size={20} />} label="Courses" />
           <SidebarItem to="/coordinator/applications" icon={<FileText size={20} />} label="My Applications" />
-          <SidebarItem to="/coordinator/resume" icon={<Upload size={20} />} label="My Resume" />
         </nav>
 
         <div style={{ padding: '1.5rem', marginTop: 'auto', borderTop: '1px solid #e5e7eb' }}>
@@ -115,8 +116,8 @@ export default function CoordinatorDashboard() {
           <Route path="profile" element={<Student />} />
           <Route path="jobs" element={<JobBoard basePath="/coordinator/jobs" />} />
           <Route path="jobs/:id" element={<JobDetails />} />
+          <Route path="courses" element={<StudentCourseList />} />
           <Route path="applications" element={<ApplicationTracker />} />
-          <Route path="resume" element={<ResumeUpload />} />
 
           <Route path="*" element={<Navigate to="/coordinator" replace />} />
         </Routes>

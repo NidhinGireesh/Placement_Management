@@ -8,6 +8,7 @@ import { useAuthStore } from './store/authStore';
 import Home from './pages/Home';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
+import ForgotPassword from './components/Auth/ForgotPassword';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 
 // Dashboards
@@ -40,12 +41,12 @@ function App() {
   }, [setUser, setRole, setLoading]);
 
   return (
-
     <Routes>
       {/* Public Routes */}
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
 
       {/* Protected Routes */}
       <Route
@@ -84,7 +85,6 @@ function App() {
       {/* Catch All */}
       <Route path="*" element={<NotFound />} />
     </Routes>
-
   );
 }
 

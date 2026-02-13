@@ -8,6 +8,7 @@ import JobDetails from './JobDetails';
 import ApplicationTracker from './ApplicationTracker';
 import ResumeUpload from './ResumeUpload';
 import NotificationPage from './NotificationPage';
+import StudentCourseList from './StudentCourseList';
 
 export default function StudentDashboard() {
   const navigate = useNavigate();
@@ -54,8 +55,8 @@ export default function StudentDashboard() {
           <SidebarItem to="/student" icon="📊" label="Overview" />
           <SidebarItem to="/student/profile" icon="👨‍🎓" label="My Profile" />
           <SidebarItem to="/student/jobs" icon="💼" label="Job Board" />
+          <SidebarItem to="/student/courses" icon="📚" label="Courses" />
           <SidebarItem to="/student/applications" icon="📝" label="Applications" />
-          <SidebarItem to="/student/resume" icon="📄" label="Resume" />
           <SidebarItem to="/student/notifications" icon="🔔" label="Notifications" />
         </nav>
 
@@ -114,8 +115,8 @@ export default function StudentDashboard() {
           <Route path="profile" element={<Student />} />
           <Route path="jobs" element={<JobBoard />} />
           <Route path="jobs/:id" element={<JobDetails />} />
+          <Route path="courses" element={<StudentCourseList />} />
           <Route path="applications" element={<ApplicationTracker />} />
-          <Route path="resume" element={<ResumeUpload />} />
           <Route path="notifications" element={<NotificationPage />} />
           <Route path="*" element={<Navigate to="/student" replace />} />
         </Routes>

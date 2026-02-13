@@ -1,7 +1,27 @@
+import { useState, useEffect } from 'react';
 import StatCard from '../dashboard/StatCard';
 import { Users, UserCheck, Building, AlertTriangle } from 'lucide-react';
+import { getDashboardStats } from '../../services/adminService';
 
 export default function AdminOverview() {
+    const [stats, setStats] = useState({
+        students: 0,
+        coordinators: 0,
+        recruiters: 0,
+        alerts: 0
+    });
+
+    useEffect(() => {
+        fetchStats();
+    }, []);
+
+    const fetchStats = async () => {
+        const result = await getDashboardStats();
+        if (result.success) {
+            setStats(result.stats);
+        }
+    };
+
     return (
         <div>
             <header className="flex justify-between items-center" style={{ marginBottom: '2rem' }}>
@@ -27,10 +47,10 @@ export default function AdminOverview() {
 
             {/* Stats Grid */}
             <div className="grid grid-cols-4 gap-6" style={{ marginBottom: '2rem' }}>
-                <StatCard title="Total Students" value="0" icon={Users} color="#2563eb" />
-                <StatCard title="Coordinators" value="0" icon={UserCheck} color="#0d9488" />
-                <StatCard title="Recruiters" value="0" icon={Building} color="#9333ea" />
-                <StatCard title="System Alerts" value="0" icon={AlertTriangle} color="#dc2626" />
+                <StatCard title="Total Students" value={stats.students} icon={Users} color="#2563eb" />
+                <StatCard title="Coordinators" value={stats.coordinators} icon={UserCheck} color="#0d9488" />
+                <StatCard title="Recruiters" value={stats.recruiters} icon={Building} color="#9333ea" />
+                <StatCard title="System Alerts" value={stats.alerts} icon={AlertTriangle} color="#dc2626" />
             </div>
         </div>
     );

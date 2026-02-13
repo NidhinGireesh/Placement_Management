@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { registerUser } from '../../services/authService';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -13,11 +14,18 @@ export default function Register() {
     // Student specific
     registerNumber: '',
     passoutYear: '',
-    passoutYear: '',
     branch: '',
     lateralEntry: 'no', // Default to no
+    // Recruiter specific
+    companyName: '',
+    industry: '',
+    website: '',
+    location: '',
+    description: '',
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -139,7 +147,7 @@ export default function Register() {
           </div>
 
           {/* Student Specific Fields */}
-          {formData.role === 'student' && (
+          {(formData.role === 'student' || formData.role === 'coordinator') && (
             <>
               <div className="grid grid-cols-2 gap-4">
                 <div className="form-group">
@@ -209,35 +217,157 @@ export default function Register() {
             </>
           )}
 
+          {/* Recruiter Specific Fields */}
+          {formData.role === 'recruiter' && (
+            <>
+              <div className="form-group">
+                <label className="form-label">
+                  Company Name
+                </label>
+                <input
+                  type="text"
+                  name="companyName"
+                  value={formData.companyName}
+                  onChange={handleChange}
+                  className="form-input"
+                  placeholder="TechCorp Solutions"
+                  required // Make required for recruiters
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="form-group">
+                  <label className="form-label">
+                    Industry
+                  </label>
+                  <input
+                    type="text"
+                    name="industry"
+                    value={formData.industry}
+                    onChange={handleChange}
+                    className="form-input"
+                    placeholder="Software Development"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">
+                    Website
+                  </label>
+                  <input
+                    type="url"
+                    name="website"
+                    value={formData.website}
+                    onChange={handleChange}
+                    className="form-input"
+                    placeholder="https://example.com"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">
+                  Location (Address)
+                </label>
+                <input
+                  type="text"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleChange}
+                  className="form-input"
+                  placeholder="City, Country"
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">
+                  Description
+                </label>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  className="form-input"
+                  placeholder="Brief description of the company..."
+                  rows="3"
+                />
+              </div>
+            </>
+          )}
+
           <div className="grid grid-cols-2 gap-4">
             <div className="form-group">
               <label className="form-label">
                 Password
               </label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="form-input"
-                placeholder="At least 6 characters"
-                required
-              />
+              <div style={{ position: 'relative' }}>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="form-input"
+                  placeholder="At least 6 characters"
+                  required
+                  style={{ paddingRight: '2.5rem' }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: '0.75rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    color: '#6b7280',
+                    padding: 0,
+                    display: 'flex',
+                    alignItems: 'center'
+                  }}
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
             </div>
 
             <div className="form-group">
               <label className="form-label">
                 Confirm Password
               </label>
-              <input
-                type="password"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className="form-input"
-                placeholder="Re-enter password"
-                required
-              />
+              <div style={{ position: 'relative' }}>
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  className="form-input"
+                  placeholder="Re-enter password"
+                  required
+                  style={{ paddingRight: '2.5rem' }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: '0.75rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    color: '#6b7280',
+                    padding: 0,
+                    display: 'flex',
+                    alignItems: 'center'
+                  }}
+                >
+                  {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
             </div>
           </div>
 
@@ -257,6 +387,11 @@ export default function Register() {
             Login here
           </Link>
         </p>
+        <div className="text-center mt-4">
+          <Link to="/" style={{ color: '#6b7280', fontSize: '0.875rem', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+            &larr; Back to Home
+          </Link>
+        </div>
       </div>
     </div>
   );

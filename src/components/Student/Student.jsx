@@ -16,7 +16,8 @@ const StudentProfile = () => {
         gender: '',
         dob: '',
         address: '',
-        lateralEntry: 'no'
+        lateralEntry: 'no',
+        resumeLink: ''
     });
     const [profileId, setProfileId] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
@@ -165,6 +166,29 @@ const StudentProfile = () => {
                             <option value="Female">Female</option>
                             <option value="Other">Other</option>
                         </select>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                        <label style={{ fontSize: '0.875rem', fontWeight: '500', color: '#4B5563' }}>Date of Birth</label>
+                        <input
+                            type="date"
+                            value={formData.dob}
+                            disabled={!isEditing}
+                            onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
+                            style={{ padding: '0.75rem', borderRadius: '0.375rem', border: '1px solid #E5E7EB', backgroundColor: isEditing ? 'white' : '#F3F4F6' }}
+                        />
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                        <label style={{ fontSize: '0.875rem', fontWeight: '500', color: '#4B5563' }}>Resume Link (Drive/Portfolio)</label>
+                        <input
+                            type="url"
+                            value={formData.resumeLink || ''}
+                            disabled={!isEditing}
+                            onChange={(e) => setFormData({ ...formData, resumeLink: e.target.value })}
+                            placeholder="https://..."
+                            style={{ padding: '0.75rem', borderRadius: '0.375rem', border: '1px solid #E5E7EB', backgroundColor: isEditing ? 'white' : '#F3F4F6' }}
+                        />
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
